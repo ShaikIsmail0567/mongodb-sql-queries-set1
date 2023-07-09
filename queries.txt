@@ -1,0 +1,193 @@
+(1) Create a Customers table / collection with the following fields: id (unique identifier), name, email, address, and phone_number.
+
+(*)
+CREATE TABLE Customers (
+id INT PRIMARY KEY,
+name VARCHAR(200) NOT NULL,
+email VARCHAR(200) NOT NULL,
+address VARCHAR(200) NOT NULL,
+phone_number VARCHAR(20) NOT NULL
+);
+
+<#>
+mydb.createCollection("customers")
+
+(2) Insert five rows / documents into the Customers table / collection with data of your choice.
+
+(*)
+INSERT INTO Customers (id, name, email, address, phone_number)
+VALUES
+(1, 'John Doe', 'john.doe@example.com', '123 Main Street', '555-1234'),
+(2, 'Jane Smith', 'jane.smith@example.com', '456 Elm Avenue', '555-5678'),
+(3, 'Michael Johnson', 'michael.johnson@example.com', '789 Oak Road', '555-9012'),
+(4, 'Emily Williams', 'emily.williams@example.com', '321 Pine Lane', '555-3456'),
+(5, 'Robert Brown', 'robert.brown@example.com', '654 Cedar Court', '555-7890'),
+(6, 'Sarah Davis', 'sarah.davis@example.com', '987 Birch Avenue', '555-2345');
+
+<#>
+mydb.customers.insertMany([
+{
+name: 'John Smith',
+email: 'john.smith@example.com',
+address: '123 Main Street',
+phone_number: '555-1234'
+},
+{
+name: 'Jane Doe',
+email: 'jane.doe@example.com',
+address: '456 Elm Avenue',
+phone_number: '555-5678'
+},
+{
+name: 'Michael Johnson',
+email: 'michael.johnson@example.com',
+address: '789 Oak Road',
+phone_number: '555-9012'
+},
+{
+name: 'Emily Williams',
+email: 'emily.williams@example.com',
+address: '321 Pine Lane',
+phone_number: '555-3456'
+},
+{
+name: 'Robert Brown',
+email: 'robert.brown@example.com',
+address: '654 Cedar Court',
+phone_number: '555-7890'
+},
+{
+name: 'Sarah Davis',
+email: 'sarah.davis@example.com',
+address: '987 Birch Avenue',
+phone_number: '555-2345'
+},
+{
+name: 'Daniel Taylor',
+email: 'daniel.taylor@example.com',
+address: '159 Maple Street',
+phone_number: '555-6789'
+},
+{
+name: 'Olivia Wilson',
+email: 'olivia.wilson@example.com',
+address: '852 Elm Avenue',
+phone_number: '555-0123'
+},
+{
+name: 'James Martinez',
+email: 'james.martinez@example.com',
+address: '753 Oak Road',
+phone_number: '555-4567'
+},
+{
+name: 'Sophia Anderson',
+email: 'sophia.anderson@example.com',
+address: '246 Pine Lane',
+phone_number: '555-8901'
+}
+]);
+
+(3) Fetch all data from the Customers table / collection.
+
+(*)
+SELECT * FROM Customers;
+
+<#>
+db.customers.find();
+
+(4) Select only the name and email fields for all customers.
+
+(*)
+SELECT name, email FROM Customers;
+
+<#>
+db.customers.find({}, { name: 1, email: 1 });
+
+(5) Fetch the customer with the id of 3.
+
+(*)
+SELECT * FROM Customers WHERE id = 3;
+
+<#>
+db.customers.find({ _id: 3 });
+
+(6) Fetch all customers whose name starts with 'A'.
+
+(*)
+SELECT * FROM Customers WHERE name LIKE 'A%';
+
+<#>
+db.customers.find({ name: { $regex: '^A', $options: 'i' } });
+
+(7) Fetch all customers, ordered by name in descending order.
+
+(*)
+SELECT * FROM Customers ORDER BY name DESC;
+
+<#>
+db.customers.find().sort({ name: -1 });
+
+(8) Update the address of the customer with id 4.
+
+(*)
+UPDATE Customers SET address = 'New Address' WHERE id = 4;
+
+<#>
+db.customers.updateOne({ _id: 4 }, { $set: { address: 'New Address' } });
+
+(9) Fetch the top 3 customers when ordered by id in ascending order.
+
+(*)
+SELECT * FROM Customers ORDER BY id ASC LIMIT 3;
+
+<#>
+db.customers.find().sort({ id: -1 }).limit(3);
+
+(10) Delete the customer with id 2.
+
+(*)
+DELETE FROM Customers WHERE id = 2;
+
+<#>
+db.customers.deleteOne({ _id: 2 });
+
+(11) Count the number of customers.
+
+()
+SELECT COUNT() AS total_customers FROM Customers;
+
+<#>
+db.customers.countDocuments();
+
+(12) Fetch all customers except the first two when ordered by id in ascending order.
+
+(*)
+SELECT * FROM Customers ORDER BY id ASC OFFSET 2;
+
+<#>
+db.customers.find().sort({ id: 1 }).skip(2);
+
+(13) Fetch all customers whose id is greater than 2 and name starts with 'B'.
+
+(*)
+SELECT * FROM Customers WHERE id > 2 AND name LIKE 'B%';
+
+<#>
+db.customers.find({ $and: [{ _id: { $gt: 2 } }, { name: { $regex: '^B', $options: 'i' } }] });
+
+(14) Fetch all customers whose id is less than 3 or name ends with 's'.
+
+(*)
+SELECT * FROM Customers WHERE id < 3 OR name LIKE '%s';
+
+<#>
+db.customers.find({ $or: [{ _id: { $lt: 3 } }, { name: { $regex: 's$', $options: 'i' } }] });
+
+(15) Fetch all customers where the phone_number field is not set or is null.
+
+(*)
+SELECT * FROM Customers WHERE phone_number IS NULL;
+
+<#>
+db.customers.find({ $or: [{ phone_number: null }, { phone_number: '' }] });
